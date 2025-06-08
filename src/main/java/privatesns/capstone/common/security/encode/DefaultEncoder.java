@@ -16,4 +16,9 @@ public class DefaultEncoder implements Encoder {
     public String encode(String input) {
         return passwordEncoder.encode(input);
     }
+
+    @Override
+    public boolean matches(String encodedPassword, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
 }
