@@ -11,16 +11,18 @@ import privatesns.capstone.core.security.model.Tokens;
 import privatesns.capstone.domain.user.dto.UserRequest;
 import privatesns.capstone.domain.user.dto.UserResponse;
 import privatesns.capstone.domain.user.service.AuthService;
+import privatesns.capstone.domain.user.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@Valid @RequestBody UserRequest.Join request) {
-        authService.join(request.loginId(), request.password(), request.name());
+        userService.join(request.loginId(), request.password(), request.name());
         return ResponseEntity.ok().body(new UserResponse.Success(true));
     }
 
