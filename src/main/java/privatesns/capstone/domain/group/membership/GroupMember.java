@@ -16,4 +16,6 @@ public class GroupMember extends BaseEntity {
     private Group group;
 
     private Long userId;
+
+    private String nickname;
 }
