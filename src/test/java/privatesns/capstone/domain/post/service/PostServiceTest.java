@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import privatesns.capstone.domain.group.service.GroupService;
 import privatesns.capstone.domain.post.Post;
 import privatesns.capstone.domain.post.PostRepository;
@@ -30,7 +31,7 @@ class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
 
-    @MockBean
+    @MockitoBean
     private GroupService groupService;
 
     private static final Long USER_ID = 1L;
