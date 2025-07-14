@@ -7,8 +7,8 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import privatesns.capstone.common.entity.BaseEntity;
-import privatesns.capstone.domain.group.membership.GroupMember;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +25,12 @@ public class Group extends BaseEntity {
             orphanRemoval = true)
     private List<GroupMember> members;
 
+    public Group(Long hostId, String name) {
+        this.hostId = hostId;
+        this.name = name;
+        members = new ArrayList<>();
+    }
+
     /*
         그룹원이 대규모 데이터가 될 시 members를 다 로딩해서 찾는 것보다
         GroupMember 엔티티에서 existsByGroupAndUser처럼
@@ -34,5 +40,9 @@ public class Group extends BaseEntity {
     public boolean isMember(Long memberId) {
         return members.stream()
                 .anyMatch(member -> member.getUserId().equals(memberId));
+    }
+
+    public void joinMember(Long memberId, String memberName) {
+        this.members.add(new GroupMember(this, memberId, memberName));
     }
 }
