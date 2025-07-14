@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import privatesns.capstone.core.exception.exception.GroupException;
 import privatesns.capstone.domain.group.Group;
 import privatesns.capstone.domain.group.GroupRepository;
+import privatesns.capstone.domain.group.dto.GroupResponse;
 import privatesns.capstone.domain.user.service.UserService;
 
 import static privatesns.capstone.core.exception.exception.ExceptionCode.GROUP_NOT_FOUND;
@@ -29,6 +30,14 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
+    public GroupResponse.Members getGroupMembers(Long groupId, Long userId) {
+        Group group = findGroup(groupId);
+        validateUserBelongToGroup(userId, groupId);
+
+        return GroupResponse.Members.from(group.getMembers());
+    }
+
+    @Transactional(readOnly = true)
     public void validateGroup(Long groupId) {
         groupRepository.findById(groupId)
                 .orElseThrow(() -> new GroupException(GROUP_NOT_FOUND));
@@ -42,8 +51,7 @@ public class GroupService {
         }
     }
 
-    @Transactional(readOnly = true)
-    Group findGroup(Long groupId) {
+    private Group findGroup(Long groupId) {
         return groupRepository.findById(groupId)
                 .orElseThrow(() -> new GroupException(GROUP_NOT_FOUND));
     }
