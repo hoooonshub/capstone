@@ -36,4 +36,8 @@ public class GroupController {
         return ResponseEntity.ok(groupService.getGroupMembers(groupId, userId));
     }
 
+    @GetMapping("/mine")
+    public ResponseEntity<GroupResponse.MyGroups> getMyGroups(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(groupService.getMyGroups(userId));
+    }
 }

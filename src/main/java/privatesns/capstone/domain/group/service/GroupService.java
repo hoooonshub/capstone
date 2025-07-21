@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import privatesns.capstone.core.exception.exception.GroupException;
 import privatesns.capstone.domain.group.Group;
+import privatesns.capstone.domain.group.GroupMemberRepository;
 import privatesns.capstone.domain.group.GroupRepository;
 import privatesns.capstone.domain.group.dto.GroupResponse;
 import privatesns.capstone.domain.user.service.UserService;
+
+import java.util.List;
 
 import static privatesns.capstone.core.exception.exception.ExceptionCode.GROUP_NOT_FOUND;
 import static privatesns.capstone.core.exception.exception.ExceptionCode.IS_NOT_GROUP_MEMBER;
@@ -19,6 +22,7 @@ public class GroupService {
     private final UserService userService;
 
     private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
     public void create(Long hostId, String groupName) {
         Group group = new Group(hostId, groupName);
@@ -41,6 +45,12 @@ public class GroupService {
     public void validateGroup(Long groupId) {
         groupRepository.findById(groupId)
                 .orElseThrow(() -> new GroupException(GROUP_NOT_FOUND));
+    }
+
+    public GroupResponse.MyGroups getMyGroups(Long userId) {
+        List<Group> groups =  groupMemberRepository.findGroupsByUserId(userId);
+
+        return GroupResponse.MyGroups.from(groups);
     }
 
     public void validateUserBelongToGroup(Long userId, Long groupId) {
