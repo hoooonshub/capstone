@@ -8,11 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import privatesns.capstone.domain.post.dto.PostRequest;
 import privatesns.capstone.domain.post.dto.PostResponse;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
-import static privatesns.capstone.domain.group.membership.QGroupMember.groupMember;
+import static privatesns.capstone.domain.group.QGroupMember.groupMember;
 import static privatesns.capstone.domain.post.QPost.post;
 
 @Repository
