@@ -3,9 +3,11 @@ package privatesns.capstone.domain.user.contoller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import privatesns.capstone.core.security.model.Tokens;
 import privatesns.capstone.domain.user.dto.UserRequest;
@@ -29,5 +31,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Tokens> login(@Valid @RequestBody UserRequest.Login request) {
         return ResponseEntity.ok(authService.login(request.loginId(), request.password()));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<UserResponse.SearchResults> searchByLoginId(@RequestParam String keyword) {
+        return ResponseEntity.ok(userService.searchByLoginId(keyword));
     }
 }

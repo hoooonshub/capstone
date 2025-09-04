@@ -7,6 +7,7 @@ import privatesns.capstone.core.exception.exception.AccountException;
 import privatesns.capstone.core.security.Encoder;
 import privatesns.capstone.domain.user.User;
 import privatesns.capstone.domain.user.UserRepository;
+import privatesns.capstone.domain.user.dto.UserResponse;
 
 import static privatesns.capstone.core.exception.exception.ExceptionCode.DUPLICATED_ID;
 import static privatesns.capstone.core.exception.exception.ExceptionCode.USER_NOT_FOUND;
@@ -47,5 +48,15 @@ public class UserService {
         return findUser(userId).getName();
     }
 
-
+    public UserResponse.SearchResults searchByLoginId(String loginId) {
+        return new UserResponse.SearchResults(
+                userRepository.findByLoginIdContainingIgnoreCase(loginId).stream()
+                        .map(user -> new UserResponse.SearchResult(
+                                        user.getId(),
+                                        user.getLoginId()
+                                )
+                        )
+                        .toList()
+        );
+    }
 }
