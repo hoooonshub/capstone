@@ -32,6 +32,10 @@ public class UserService {
         return userRepository.existsByLoginId(loginId);
     }
 
+    public Long findUserIdByLoginId(String loginId) {
+        return findUser(loginId).getId();
+    }
+
     @Transactional(readOnly = true)
     User findUser(String loginId) {
         return userRepository.findByLoginId(loginId)

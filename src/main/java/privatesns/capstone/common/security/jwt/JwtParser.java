@@ -10,15 +10,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import privatesns.capstone.core.exception.exception.AccountException;
 import privatesns.capstone.core.exception.exception.ExceptionCode;
+import privatesns.capstone.domain.user.service.UserService;
 
 import javax.crypto.SecretKey;
 
 @Component
 public class JwtParser {
+    private final UserService userService;
     private final UserDetailsService userDetailsService;
     private final io.jsonwebtoken.JwtParser parser;
 
-    public JwtParser(UserDetailsService userDetailsService, JwtSecretProvider secretProvider) {
+    public JwtParser(UserService userService, UserDetailsService userDetailsService, JwtSecretProvider secretProvider) {
+        this.userService = userService;
         this.userDetailsService = userDetailsService;
         this.parser = Jwts.parser()
                 .verifyWith((SecretKey)secretProvider.key())
@@ -27,8 +30,10 @@ public class JwtParser {
 
     public Authentication parseAuthentication(String token) {
         var loginId = parseLoginId(token);
+        Long userId = userService.findUserIdByLoginId(loginId);
         var userDetails = userDetailsService.loadUserByUsername(loginId);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        return new UsernamePasswordAuthenticationToken(userId, null, userDetails.getAuthorities());
     }
 
     private String parseLoginId(String token) {
