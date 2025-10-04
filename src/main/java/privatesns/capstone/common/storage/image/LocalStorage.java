@@ -2,6 +2,7 @@ package privatesns.capstone.common.storage.image;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import privatesns.capstone.core.exception.exception.FileException;
 import privatesns.capstone.core.storage.image.ImageStorage;
 
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static privatesns.capstone.core.exception.exception.ExceptionCode.FILE_DIRECTORY_CREATED_FAILED;
+import static privatesns.capstone.core.exception.exception.ExceptionCode.FILE_UPLOAD_FAILED;
 
 @Component
 public class LocalStorage implements ImageStorage {
@@ -21,7 +23,7 @@ public class LocalStorage implements ImageStorage {
     }
 
     @Override
-    public String upload(String filename) {
+    public String upload(MultipartFile file, String filename) {
         if (!Files.exists(rootPath)) {
             try {
                 Files.createDirectories(rootPath);
@@ -31,6 +33,13 @@ public class LocalStorage implements ImageStorage {
         }
 
         Path target = rootPath.resolve(filename);
+
+        try {
+            file.transferTo(target);
+        } catch (IOException e) {
+            throw new FileException(FILE_UPLOAD_FAILED);
+        }
+
         return target.toString();
     }
 }

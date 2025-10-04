@@ -25,7 +25,9 @@ public class ImageService {
         String ext = extractExtension(original);
         String filename = UUID.randomUUID() + "." + ext;
 
-        return imageStorage.upload(filename);
+        imageStorage.upload(file, filename);
+
+        return "/posts/" + filename;
     }
 
     private String extractExtension(String original) {
